@@ -119,6 +119,49 @@ button {
   color: var(--muted);
 }
 
+.sample-preview {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.56);
+  border: 1px solid rgba(255, 255, 255, 0.76);
+}
+
+.sample-preview-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #6b574b;
+}
+
+.sample-link-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sample-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.84);
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 800;
+  box-shadow: 0 10px 20px rgba(194, 153, 120, 0.1);
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.sample-link:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 14px 24px rgba(194, 153, 120, 0.16);
+}
+
 .brand-badge,
 .eyebrow,
 .task-card-bottom span,

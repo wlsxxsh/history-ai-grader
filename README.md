@@ -1,28 +1,39 @@
-# History AI Grader
+# 历史作业批改与学情分析平台
 
-History AI Grader is a React + Express application for middle school history homework grading, answer sheet recognition, and learning feedback analysis.
+这是一个面向中学历史作业场景的 React + Express 应用，支持题目抽取、答题卡识别、选择题批阅、主观题阅卷和结果导出，适合本地评估演示与校内试用。
 
-## Current Scope
+## 当前能力
 
-- Choice question grading
-- Subjective question grading
-- Answer sheet upload and recognition
-- Export of grading results and explanation documents
-- Local-first runtime storage for evaluation and experimentation
+- 选择题批阅与统计分析
+- 普通主观题、论述题批改
+- 题目与参考答案上传、识别、回填
+- 学生答题卡上传、切分、识别与归属修正
+- 选择题详解导出与主观题结果导出
+- 本地运行、免安装 ZIP 打包发布
 
-## Open-Source Safety Notes
+## 内置范例
 
-- This repository intentionally excludes all real student data, uploaded materials, logs, caches, and local debugging artifacts.
-- Do not commit `data/app-state.json`, `data/uploads/`, `data/generated/`, `logs/`, `.env`, or any exported documents.
-- API keys should be configured locally after launch and must never be committed.
+仓库中保留了脱敏后的演示资料，便于下载者直接查看：
 
-## Development
+- `Samples/范例-试题.pdf`
+- `Samples/范例-参考答案.pdf`
+- `Samples/范例-答题卡.pdf`
 
-### Requirements
+这些资料仅用于演示，不包含真实学生隐私信息。
 
-- Node.js 24.x on Windows x64 is the currently verified environment.
+## 开源与隐私说明
 
-### Install
+- 仓库默认不包含真实学生数据、运行日志、缓存、本地调试痕迹和 API Key。
+- 请不要提交 `data/app-state.json`、`data/uploads/`、`data/generated/`、`logs/`、`.env` 以及导出的批改文档。
+- API Key 只应在本机或服务器部署后填写，不能提交到 GitHub。
+
+## 本地开发
+
+### 环境要求
+
+- 当前已验证环境：Windows x64 + Node.js 24.x
+
+### 安装依赖
 
 ```bash
 npm install
@@ -31,61 +42,54 @@ npm --prefix server install
 npm run prepare:native
 ```
 
-### Run in development
+### 开发运行
 
 ```bash
 npm run dev:server
 npm run dev:frontend
 ```
 
-Frontend dev server: `http://127.0.0.1:5173`
+前端开发地址：`http://127.0.0.1:5173`
 
-Backend API: `http://127.0.0.1:3857`
+后端接口地址：`http://127.0.0.1:3857`
 
-## Production-style local run
+## 本地生产方式运行
 
-Build the frontend and start the backend:
+先构建前端，再启动后端：
 
 ```bash
 npm run build
 npm start
 ```
 
-After the frontend is built, the backend will serve the static app on the same port.
+构建完成后，后端会在同一端口托管前端页面。
 
-## Portable ZIP Release
+## 免安装 ZIP 发布
 
-This repository includes a Windows x64 portable packaging flow.
+仓库内置了 Windows x64 免安装打包流程。
 
-### Build locally
+### 本地打包
 
 ```bash
 npm run release:zip:win-x64
 ```
 
-The ZIP file is created at `release/history-ai-grader-win-x64.zip`.
+生成文件位置：`release/history-ai-grader-win-x64.zip`
 
-### Release contents
+### ZIP 内容
 
-- prebuilt frontend assets
-- backend source
-- server runtime dependencies
-- empty `data/` and `logs/` directories
-- `start.bat` and `start.ps1` launchers
+- 已构建前端页面
+- 后端源码与运行依赖
+- 运行所需的 `data/` 和 `logs/` 目录
+- 内置 `Samples/` 演示资料
+- `start.bat` 与 `start.ps1` 启动脚本
 
-### GitHub Release automation
+### GitHub Release 自动化
 
-Publishing a GitHub Release or manually triggering the `Release Portable ZIP` workflow will build the Windows x64 ZIP and attach it to the release.
+发布 GitHub Release 或手动触发 `Release Portable ZIP` 工作流后，会自动构建 Windows x64 ZIP 并挂到 Release 页面。
 
-## Repository Checklist Before Publishing
+## 已知限制
 
-- add your own copyright name to `LICENSE`
-- review screenshots and sample assets before committing them
-- replace placeholder release notes with your project introduction
-- add your sample questions, reference answers, and answer sheet templates later in a separate, sanitized sample-data folder
-
-## Known Limitations
-
-- The current app is still local-first and not yet multi-user.
-- API settings are stored in local runtime state, so do not share a runtime data folder between users.
-- Public server deployment should be protected with authentication before exposure to the internet.
+- 当前仍以本地单机使用为主，尚未实现多用户隔离。
+- 后台设置保存在本地运行数据中，不建议多人共享同一份 `data/` 目录。
+- 如果要部署到公网，请先补齐登录鉴权和权限控制。

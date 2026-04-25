@@ -64,6 +64,7 @@ const app = express();
 const rootDir = path.resolve(__dirname, '..', '..');
 const frontendDistDir = path.join(rootDir, 'frontend', 'dist');
 const frontendIndexPath = path.join(frontendDistDir, 'index.html');
+const samplesDir = path.join(rootDir, 'Samples');
 const host = String(process.env.HISTORY_AI_HOST || process.env.HOST || '127.0.0.1').trim() || '127.0.0.1';
 const configuredPort = Number(process.env.HISTORY_AI_PORT || process.env.PORT || 3857);
 const port = Number.isFinite(configuredPort) ? configuredPort : 3857;
@@ -91,6 +92,10 @@ const upload = multer({ storage });
 
 app.use(cors());
 app.use(express.json({ limit: '12mb' }));
+
+if (fs.existsSync(samplesDir)) {
+  app.use('/samples', express.static(samplesDir));
+}
 
 process.on('unhandledRejection', (reason) => {
   console.error('[process] Unhandled promise rejection:', reason);

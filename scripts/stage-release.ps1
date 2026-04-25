@@ -4,8 +4,10 @@ $root = Split-Path -Parent $PSScriptRoot
 $releaseRoot = Join-Path $root 'release'
 $stageDir = Join-Path $releaseRoot 'history-ai-grader-win-x64'
 $frontendDistDir = Join-Path $root 'frontend\dist'
+$samplesDir = Join-Path $root 'Samples'
 $serverDir = Join-Path $root 'server'
 $serverNodeModulesDir = Join-Path $serverDir 'node_modules'
+$releaseReadmeSource = Join-Path $PSScriptRoot 'release-readme.txt'
 $nodeExe = (Get-Command node.exe -ErrorAction Stop).Source
 
 if (-not (Test-Path -LiteralPath $serverNodeModulesDir)) {
@@ -29,6 +31,7 @@ New-Item -ItemType Directory -Force -Path $stageDir | Out-Null
 $serverStageDir = Join-Path $stageDir 'server'
 $frontendStageDir = Join-Path $stageDir 'frontend'
 $dataStageDir = Join-Path $stageDir 'data'
+$samplesStageDir = Join-Path $stageDir 'Samples'
 New-Item -ItemType Directory -Force -Path $serverStageDir | Out-Null
 New-Item -ItemType Directory -Force -Path $frontendStageDir | Out-Null
 New-Item -ItemType Directory -Force -Path $dataStageDir | Out-Null
@@ -39,6 +42,9 @@ New-Item -ItemType Directory -Force -Path (Join-Path $stageDir 'logs') | Out-Nul
 Copy-Item -LiteralPath (Join-Path $serverDir 'src') -Destination $serverStageDir -Recurse -Force
 Copy-Item -LiteralPath $serverNodeModulesDir -Destination $serverStageDir -Recurse -Force
 Copy-Item -LiteralPath $frontendDistDir -Destination $frontendStageDir -Recurse -Force
+if (Test-Path -LiteralPath $samplesDir) {
+  Copy-Item -LiteralPath $samplesDir -Destination $samplesStageDir -Recurse -Force
+}
 
 foreach ($file in @('package.json', 'package-lock.json', 'nodemon.json')) {
   $source = Join-Path $serverDir $file
@@ -55,40 +61,6 @@ foreach ($file in @('LICENSE', '.env.example')) {
 }
 
 Copy-Item -LiteralPath $nodeExe -Destination (Join-Path $stageDir 'node.exe') -Force
-
-$appState = @'
-{
-  "settings": {
-    "generalProvider": "doubao",
-    "generalApiKey": "",
-    "generalModel": "doubao-seed-2-0-pro-260215",
-    "answerSheetProvider": "siliconflow",
-    "answerSheetApiKey": "",
-    "answerSheetModel": "PaddlePaddle/PaddleOCR-VL",
-    "subjectiveGradingProvider": "siliconflow",
-    "subjectiveGradingApiKey": "",
-    "subjectiveGradingModel": "Pro/deepseek-ai/DeepSeek-R1",
-    "apiBaseUrl": "https://ark.cn-beijing.volces.com/api/v3",
-    "answerSheetBatchConcurrency": 2,
-    "normalApiKey": "",
-    "strongApiKey": "",
-    "normalModel": "doubao-seed-2-0-lite-260215",
-    "strongModel": "doubao-seed-2-0-pro-260215",
-    "rolePreset": "objective",
-    "customRolePrompt": "",
-    "subjectiveOrdinaryRulePrompt": "",
-    "subjectiveEssayRulePrompt": "",
-    "classrooms": []
-  },
-  "tasks": [],
-  "questions": [],
-  "uploads": [],
-  "answerSheets": [],
-  "studentSummaries": []
-}
-'@
-
-Set-Content -LiteralPath (Join-Path $dataStageDir 'app-state.json') -Value $appState -Encoding UTF8
 
 $startBat = @'
 @echo off
@@ -129,17 +101,15 @@ try {
 '@
 Set-Content -LiteralPath (Join-Path $stageDir 'start.ps1') -Value $startPs1 -Encoding UTF8
 
-$releaseReadme = @'
-History AI Grader Portable Release
+if (Test-Path -LiteralPath $releaseReadmeSource) {
+  Copy-Item -LiteralPath $releaseReadmeSource -Destination (Join-Path $stageDir 'README.txt') -Force
+} else {
+  $fallbackReadme = @'
+Portable Release
 
-Quick Start
 1. Extract the ZIP to a writable folder.
-2. Double-click start.bat.
+2. Run start.bat.
 3. Open http://127.0.0.1:3857 if the browser does not open automatically.
-
-Notes
-- This release is intended for Windows x64.
-- Runtime data is stored under data/ and logs are stored under logs/.
-- API keys are configured inside the app and are not bundled with the release.
 '@
-Set-Content -LiteralPath (Join-Path $stageDir 'README.txt') -Value $releaseReadme -Encoding UTF8
+  Set-Content -LiteralPath (Join-Path $stageDir 'README.txt') -Value $fallbackReadme -Encoding UTF8
+}

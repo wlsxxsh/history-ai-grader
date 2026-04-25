@@ -125,6 +125,12 @@ const stepTabs = [
   { id: 'grading', label: '步骤 5 主观题批阅', icon: Brain },
 ] as const;
 
+const SAMPLE_MATERIALS = [
+  { label: '范例试题', href: '/samples/%E8%8C%83%E4%BE%8B-%E8%AF%95%E9%A2%98.pdf' },
+  { label: '范例答案', href: '/samples/%E8%8C%83%E4%BE%8B-%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88.pdf' },
+  { label: '范例答题卡', href: '/samples/%E8%8C%83%E4%BE%8B-%E7%AD%94%E9%A2%98%E5%8D%A1.pdf' },
+] as const;
+
 type StepId = (typeof stepTabs)[number]['id'];
 type ConnectionTestTarget = 'general' | 'answerSheet' | 'subjectiveGrading';
 const studentNameSplitPattern = /[\s,\uFF0C\u3001\uFF1B;]+/;
@@ -1206,10 +1212,21 @@ export default function App() {
         <section className="brand-card">
           <div className="brand-badge">
             <Layers3 size={16} />
-            历史批改工作台
+            中学历史作业批改
           </div>
-          <h1>历史批改工作台</h1>
-          <p>使用 AI 自动识别并批阅历史作业。</p>
+          <h1>历史作业批改与学情分析平台</h1>
+          <p>支持题目识别、答题卡识别、选择题批阅、主观题阅卷与结果导出，适合评估展示和校内试用。</p>
+          <div className="sample-preview">
+            <div className="sample-preview-title">内置范例资料</div>
+            <p>首次体验时，可直接打开试题、参考答案和答题卡范例进行查看。</p>
+            <div className="sample-link-list">
+              {SAMPLE_MATERIALS.map((sample) => (
+                <a key={sample.href} className="sample-link" href={sample.href} target="_blank" rel="noreferrer">
+                  {sample.label}
+                </a>
+              ))}
+            </div>
+          </div>
         </section>
 
         <section className="task-panel">
