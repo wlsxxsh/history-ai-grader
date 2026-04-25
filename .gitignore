@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+server/node_modules/
+
+# Build outputs
+frontend/dist/
+release/
+
+# Runtime data
+data/app-state*.json
+data/uploads/**
+data/generated/**
+logs/**
+
+# Local caches and temp artifacts
+.npm-cache/
+.codex_temp_docs/
+.codex_temp_docx/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

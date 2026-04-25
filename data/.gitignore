@@ -1,0 +1,11 @@
+*
+!.gitignore
+!README.md
+!uploads/
+!generated/
+
+uploads/**
+!uploads/.gitkeep
+
+generated/**
+!generated/.gitkeep

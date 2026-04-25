@@ -1,0 +1,19 @@
+{
+  "name": "history-ai-grader",
+  "description": "Open-source middle school history homework grading and learning insights tool.",
+  "private": true,
+  "version": "0.1.0",
+  "license": "MIT",
+  "scripts": {
+    "prepare:native": "node scripts/ensure-native-bindings.js --all",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:server": "npm --prefix server run dev",
+    "build": "npm run build:frontend",
+    "build:frontend": "npm --prefix frontend run build",
+    "start": "npm --prefix server run start",
+    "start:server": "npm --prefix server run start",
+    "check:subjective-ordinary": "node scripts/check-subjective-ordinary-regression.js",
+    "release:stage:win-x64": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/stage-release.ps1",
+    "release:zip:win-x64": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-release.ps1"
+  }
+}

@@ -1,0 +1,48 @@
+name: Release Portable ZIP
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  build-portable-win-x64:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install root dependencies
+        run: npm install
+
+      - name: Install frontend dependencies
+        run: npm install
+        working-directory: frontend
+
+      - name: Install server dependencies
+        run: npm install
+        working-directory: server
+
+      - name: Prepare native bindings
+        run: npm run prepare:native
+
+      - name: Build portable ZIP
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-release.ps1
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: history-ai-grader-win-x64
+          path: release/history-ai-grader-win-x64.zip
+
+      - name: Attach to GitHub Release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/history-ai-grader-win-x64.zip
