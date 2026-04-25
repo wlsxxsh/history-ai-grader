@@ -2,6 +2,7 @@
   <img src="./frontend/src/assets/hero.png" alt="历史作业智能批改与学情改进平台" width="160" />
   <h1>历史作业智能批改与学情改进平台</h1>
   <p>面向中学历史作业、专题训练与阶段测评场景的本地化 AI 批改工作台</p>
+  <p><strong>项目作者：</strong>Lancy Wu</p>
   <p>帮助教师把“识别、评分、解释、复核、诊断、导出”串成完整闭环，让批改提效真正转化为讲评支持与学情改进。</p>
   <p>
     <a href="https://github.com/wlsxxsh/history-ai-grader/releases/latest/download/history-ai-grader-win-x64.zip"><strong>下载 Windows 免安装版</strong></a>
