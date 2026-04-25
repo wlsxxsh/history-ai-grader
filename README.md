@@ -6,6 +6,8 @@
   <p>
     <a href="https://github.com/wlsxxsh/history-ai-grader/releases/latest/download/history-ai-grader-win-x64.zip"><strong>下载 Windows 免安装版</strong></a>
     ·
+    <a href="https://wwbom.lanzouu.com/ipVaI3o1w33c"><strong>蓝奏云下载</strong></a>
+    ·
     <a href="https://github.com/wlsxxsh/history-ai-grader/releases/latest"><strong>查看全部版本</strong></a>
     ·
     <a href="./使用说明.md"><strong>查看使用说明</strong></a>
@@ -15,7 +17,7 @@
 </div>
 
 > [!IMPORTANT]
-> 如果您只是想体验软件效果，请直接下载上方的 Windows 免安装版 ZIP，不需要先研究源码。
+> 如果您只是想体验软件效果，可以直接下载上方的 Windows 免安装版 ZIP；如果 GitHub 下载较慢，也可以使用蓝奏云下载，不需要先研究源码。
 
 > [!TIP]
 > 第一步：请先去火山引擎申请 API Key。  
@@ -85,9 +87,10 @@
 
 ### 第 2 步：下载软件
 
-普通用户推荐直接下载 Windows 免安装版：
+普通用户推荐直接下载 Windows 免安装版。为了方便中国大陆用户，当前提供 GitHub 和蓝奏云两种下载方式：
 
 - [下载 Windows 免安装版 ZIP](https://github.com/wlsxxsh/history-ai-grader/releases/latest/download/history-ai-grader-win-x64.zip)
+- [蓝奏云下载](https://wwbom.lanzouu.com/ipVaI3o1w33c)
 
 也可以在这里查看全部版本：
 
@@ -123,6 +126,7 @@
 ## 五、下载与资料
 
 - Windows 免安装版： [history-ai-grader-win-x64.zip](https://github.com/wlsxxsh/history-ai-grader/releases/latest/download/history-ai-grader-win-x64.zip)
+- 蓝奏云下载： [蓝奏云下载链接](https://wwbom.lanzouu.com/ipVaI3o1w33c)
 - Release 页面： [查看全部版本](https://github.com/wlsxxsh/history-ai-grader/releases/latest)
 - 中文使用说明： [使用说明.md](./使用说明.md)
 - 范例资料说明： [Samples/README.md](./Samples/README.md)
@@ -132,6 +136,8 @@
 ### 1. 我只想试用，需要看源码吗
 
 不需要。普通用户直接下载 ZIP 包即可。
+
+如果 GitHub 下载速度较慢，也可以直接使用蓝奏云链接下载。
 
 ### 2. 为什么打开软件后不能直接批改
 
