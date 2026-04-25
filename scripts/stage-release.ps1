@@ -60,6 +60,10 @@ foreach ($file in @('LICENSE', '.env.example')) {
   }
 }
 
+Get-ChildItem -LiteralPath $root -File | Where-Object { $_.Extension -ieq '.md' } | ForEach-Object {
+  Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $stageDir $_.Name) -Force
+}
+
 Copy-Item -LiteralPath $nodeExe -Destination (Join-Path $stageDir 'node.exe') -Force
 
 $startBat = @'
