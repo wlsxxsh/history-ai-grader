@@ -7,7 +7,7 @@
    - 获取 API Key 并配置：https://www.volcengine.com/docs/82379/1263279
    - 管理 API Key：https://www.volcengine.com/docs/82379/1361424
 2. 将 ZIP 解压到可写目录。
-3. 双击 start.bat。
+3. 双击 点击这里打开软件.bat。
 4. 如果浏览器没有自动打开，请访问 http://127.0.0.1:3857
 5. 进入软件右上角“后台设置”，填写 API Key。
 6. 建议先用 Samples/ 目录中的范例资料跑一遍流程。
@@ -16,7 +16,7 @@
 - 使用说明.md
 - README.md
 - Samples/ 范例资料
-- start.bat 与 start.ps1 启动脚本
+- 点击这里打开软件.bat、start.bat 与 start.ps1 启动脚本
 
 说明
 - 本版本适用于 Windows x64。
