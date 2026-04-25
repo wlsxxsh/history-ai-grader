@@ -9,6 +9,17 @@ $serverDir = Join-Path $root 'server'
 $serverNodeModulesDir = Join-Path $serverDir 'node_modules'
 $releaseReadmeSource = Join-Path $PSScriptRoot 'release-readme.txt'
 $nodeExe = (Get-Command node.exe -ErrorAction Stop).Source
+$launcherName = -join @(
+  [char]0x70B9
+  [char]0x51FB
+  [char]0x8FD9
+  [char]0x91CC
+  [char]0x6253
+  [char]0x5F00
+  [char]0x8F6F
+  [char]0x4EF6
+  '.bat'
+)
 
 if (-not (Test-Path -LiteralPath $serverNodeModulesDir)) {
   throw 'Missing server/node_modules. Please install dependencies first.'
@@ -66,26 +77,107 @@ Get-ChildItem -LiteralPath $root -File | Where-Object { $_.Extension -ieq '.md' 
 
 Copy-Item -LiteralPath $nodeExe -Destination (Join-Path $stageDir 'node.exe') -Force
 
+$launchPs1 = @'
+$ErrorActionPreference = 'Stop'
+
+$root = Split-Path -Parent $MyInvocation.MyCommand.Path
+$serverDir = Join-Path $root 'server'
+$nodeExe = Join-Path $root 'node.exe'
+$appUrl = 'http://127.0.0.1:3857'
+$healthUrl = "$appUrl/api/health"
+$logDir = Join-Path $root 'logs'
+$stdoutLog = Join-Path $logDir 'server.stdout.log'
+$stderrLog = Join-Path $logDir 'server.stderr.log'
+
+function Wait-ForEnter {
+  param(
+    [string]$Prompt = 'Press Enter to exit'
+  )
+
+  if ([Environment]::UserInteractive) {
+    Read-Host $Prompt | Out-Null
+  }
+}
+
+function Test-Health {
+  try {
+    $response = Invoke-WebRequest -UseBasicParsing -Uri $healthUrl -TimeoutSec 2
+    return $response.StatusCode -eq 200
+  } catch {
+    return $false
+  }
+}
+
+if (-not (Test-Path -LiteralPath $nodeExe)) {
+  Write-Host 'Missing bundled node.exe.'
+  Write-Host 'Please make sure the ZIP has been fully extracted.'
+  Wait-ForEnter
+  exit 1
+}
+
+New-Item -ItemType Directory -Force -Path $logDir | Out-Null
+
+if (Test-Health) {
+  if ($env:NO_BROWSER -ne '1') {
+    Start-Process $appUrl | Out-Null
+  }
+  exit 0
+}
+
+$process = Start-Process -FilePath $nodeExe `
+  -ArgumentList 'src/index.js' `
+  -WorkingDirectory $serverDir `
+  -WindowStyle Hidden `
+  -RedirectStandardOutput $stdoutLog `
+  -RedirectStandardError $stderrLog `
+  -PassThru
+
+$ready = $false
+for ($i = 0; $i -lt 40; $i++) {
+  Start-Sleep -Seconds 1
+  if (Test-Health) {
+    $ready = $true
+    break
+  }
+
+  if ($process.HasExited) {
+    break
+  }
+}
+
+if ($ready) {
+  if ($env:NO_BROWSER -ne '1') {
+    Start-Process $appUrl | Out-Null
+  }
+  exit 0
+}
+
+if (-not $process.HasExited) {
+  try {
+    $process | Stop-Process -Force
+  } catch {
+  }
+}
+
+Write-Host 'The app could not start successfully.'
+Write-Host 'Please check logs\server.stdout.log and logs\server.stderr.log.'
+Wait-ForEnter
+exit 1
+'@
+Set-Content -LiteralPath (Join-Path $stageDir '_launch.ps1') -Value $launchPs1 -Encoding UTF8
+
+$launcherBat = @'
+@echo off
+setlocal
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0_launch.ps1"
+endlocal
+'@
+Set-Content -LiteralPath (Join-Path $stageDir $launcherName) -Value $launcherBat -Encoding ASCII
+
 $startBat = @'
 @echo off
 setlocal
-set "ROOT=%~dp0"
-set "SERVER_DIR=%ROOT%server"
-if not exist "%ROOT%node.exe" (
-  echo Missing bundled node.exe.
-  pause
-  exit /b 1
-)
-start "" http://127.0.0.1:3857
-pushd "%SERVER_DIR%"
-"%ROOT%node.exe" src\index.js
-set "EXITCODE=%ERRORLEVEL%"
-popd
-if not "%EXITCODE%"=="0" (
-  echo.
-  echo Application exited with code %EXITCODE%.
-  pause
-)
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0_launch.ps1"
 endlocal
 '@
 Set-Content -LiteralPath (Join-Path $stageDir 'start.bat') -Value $startBat -Encoding ASCII
@@ -93,15 +185,7 @@ Set-Content -LiteralPath (Join-Path $stageDir 'start.bat') -Value $startBat -Enc
 $startPs1 = @'
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
-$serverDir = Join-Path $root 'server'
-$nodeExe = Join-Path $root 'node.exe'
-Start-Process 'http://127.0.0.1:3857' | Out-Null
-Push-Location $serverDir
-try {
-  & $nodeExe 'src/index.js'
-} finally {
-  Pop-Location
-}
+& (Join-Path $root '_launch.ps1')
 '@
 Set-Content -LiteralPath (Join-Path $stageDir 'start.ps1') -Value $startPs1 -Encoding UTF8
 
